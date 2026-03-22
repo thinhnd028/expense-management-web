@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ExpenseFlow — Smart Expense Management PWA
 
-## Getting Started
+A full-stack expense management app built with Next.js 16, Supabase, and Tailwind CSS. Works as a desktop dashboard and installable mobile PWA.
 
-First, run the development server:
+## Tech Stack
+
+- **Frontend**: Next.js 16 (App Router) + TypeScript + Tailwind CSS
+- **Backend**: Supabase (Auth + PostgreSQL + RLS)
+- **Charts**: Recharts
+- **Deployment**: Vercel
+
+## Features
+
+- 🔐 Google OAuth login via Supabase
+- 💳 Multi-wallet system (Cash / Bank / E-Wallet)
+- 💸 Transactions: Income, Expense, Transfer
+- 📊 Dashboard with income/expense charts and category breakdown
+- 🤝 Debt tracking with partial repayments and progress bars
+- 📱 Mobile PWA (installable, bottom nav, numeric keypad, bottom sheets)
+- ⚡ Atomic balance updates via PostgreSQL functions
+
+---
+
+## Setup
+
+### 1. Create a Supabase Project
+
+Go to [supabase.com](https://supabase.com) → New Project.
+
+### 2. Run the Database Schema
+
+In Supabase SQL Editor, run the contents of `supabase/schema.sql`.
+
+This creates all tables, RLS policies, functions, and default categories.
+
+### 3. Configure Google OAuth
+
+In Supabase Dashboard → Authentication → Providers → Google:
+1. Enable Google provider
+2. Add your Google OAuth Client ID & Secret (from [Google Cloud Console](https://console.cloud.google.com))
+3. Add `https://YOUR_PROJECT_ID.supabase.co/auth/v1/callback` to Google OAuth authorized redirect URIs
+
+### 4. Set Environment Variables
+
+Edit `.env.local` with your credentials:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Find these in: Supabase Dashboard → Settings → API
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Run Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push your code to GitHub
+2. Import the repo in [Vercel](https://vercel.com/new)
+3. Add the two environment variables in Vercel project settings
+4. Deploy
 
-## Deploy on Vercel
+### After deploying, update Supabase Auth settings:
+- Authentication → URL Configuration → Site URL → `https://your-app.vercel.app`
+- Add `https://your-app.vercel.app/**` to Redirect URLs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── (dashboard)/          # Protected routes with sidebar/bottom nav
+│   │   ├── page.tsx          # Dashboard (charts, stats, recent txns)
+│   │   ├── wallets/          # Wallet management
+│   │   ├── transactions/     # Transaction list + new transaction
+│   │   └── debts/            # Debt tracking
+│   ├── auth/
+│   │   ├── login/            # Google login page
+│   │   └── callback/         # OAuth callback route
+│   └── layout.tsx
+├── components/
+│   ├── ui/                   # Button, Card, Input, BottomSheet, NumericKeypad
+│   ├── layout/               # Sidebar (desktop), BottomNav (mobile), MobileHeader
+│   ├── dashboard/            # StatsCard, IncomeExpenseChart, CategoryPieChart
+│   ├── wallets/              # WalletCard, WalletForm
+│   ├── transactions/         # TransactionItem, TransactionForm
+│   └── debts/                # DebtCard, DebtForm, RepaymentForm
+├── hooks/                    # useWallets, useTransactions, useDebts, useCategories
+├── lib/
+│   └── supabase/             # client.ts, server.ts, middleware.ts
+└── types/
+    └── database.ts           # Full TypeScript types for all tables
+```
+
+## PWA Installation
+
+1. Open the app in mobile Chrome or Safari
+2. Tap Share → "Add to Home Screen"
+3. The app installs as a standalone app with offline support
