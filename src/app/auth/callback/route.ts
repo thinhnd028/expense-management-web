@@ -6,8 +6,14 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/'
 
+  // When behind a proxy/tunnel, x-forwarded-host has the real public hostname
+  const forwardedHost = request.headers.get('x-forwarded-host')
+  const forwardedProto = request.headers.get('x-forwarded-proto') ?? 'https'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const baseUrl = siteUrl ?? (forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin)
+
   if (code) {
-    const redirectResponse = NextResponse.redirect(`${origin}${next}`)
+    const redirectResponse = NextResponse.redirect(`${baseUrl}${next}`)
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,5 +38,5 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth/login?error=auth_error`)
+  return NextResponse.redirect(`${baseUrl}/auth/login?error=auth_error`)
 }

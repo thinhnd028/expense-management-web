@@ -26,10 +26,14 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
 
+  function getSiteUrl() {
+    return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+  }
+
   async function handleGoogleLogin() {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${getSiteUrl()}/auth/callback` },
     })
   }
 
@@ -50,7 +54,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: `${getSiteUrl()}/auth/callback` },
     })
     setLoading(false)
     if (error) { setError(error.message); return }
