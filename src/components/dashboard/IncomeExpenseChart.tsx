@@ -1,7 +1,16 @@
 'use client'
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
+import { Bar } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+} from 'chart.js'
 import { useCurrency } from '@/contexts/CurrencyContext'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip)
 
 interface ChartData {
   month: string
@@ -9,55 +18,80 @@ interface ChartData {
   expense: number
 }
 
-interface IncomeExpenseChartProps {
-  data: ChartData[]
-}
-
-function CustomTooltip({ active, payload, label, formatAmount }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }>; label?: string; formatAmount: (n: number) => string }) {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100 text-xs">
-      <p className="font-semibold text-gray-700 mb-1">{label}</p>
-      {payload.map(p => (
-        <div key={p.name} className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
-          <span className="text-gray-500 capitalize">{p.name}:</span>
-          <span className="font-medium">{formatAmount(p.value)}</span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-export default function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
+export default function IncomeExpenseChart({ data }: { data: ChartData[] }) {
   const { formatAmount } = useCurrency()
+
   if (!data.length) return (
-    <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
-      No data yet
-    </div>
+    <div className="flex items-center justify-center h-40 text-muted-foreground text-sm">No data yet</div>
   )
 
+  const chartData = {
+    labels: data.map(d => d.month),
+    datasets: [
+      {
+        label: 'Income',
+        data: data.map(d => d.income),
+        backgroundColor: '#10b981',
+        borderRadius: 6,
+        borderSkipped: false as const,
+        barPercentage: 0.6,
+        categoryPercentage: 0.7,
+      },
+      {
+        label: 'Expense',
+        data: data.map(d => d.expense),
+        backgroundColor: '#f87171',
+        borderRadius: 6,
+        borderSkipped: false as const,
+        barPercentage: 0.6,
+        categoryPercentage: 0.7,
+      },
+    ],
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx: { dataset: { label: string }; raw: unknown }) =>
+            ` ${ctx.dataset.label}: ${formatAmount(ctx.raw as number)}`,
+        },
+        backgroundColor: '#fff',
+        titleColor: '#374151',
+        bodyColor: '#6b7280',
+        borderColor: '#f3f4f6',
+        borderWidth: 1,
+        padding: 10,
+        cornerRadius: 10,
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: '#94a3b8', font: { size: 11 } },
+      },
+      y: {
+        grid: { color: '#f1f5f9' },
+        border: { display: false },
+        ticks: {
+          color: '#94a3b8',
+          font: { size: 11 },
+          maxTicksLimit: 5,
+          callback: (v: number | string) =>
+            typeof v === 'number' && v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v,
+        },
+      },
+    },
+    animation: { duration: 400 },
+  }
+
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <BarChart data={data} barGap={4} barCategoryGap="30%">
-        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-        <XAxis
-          dataKey="month"
-          tick={{ fontSize: 11, fill: '#94a3b8' }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <YAxis
-          tick={{ fontSize: 11, fill: '#94a3b8' }}
-          axisLine={false}
-          tickLine={false}
-          tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
-          width={40}
-        />
-        <Tooltip content={<CustomTooltip formatAmount={formatAmount} />} cursor={{ fill: '#f8fafc' }} />
-        <Bar dataKey="income" name="income" fill="#10b981" radius={[6, 6, 0, 0]} />
-        <Bar dataKey="expense" name="expense" fill="#f87171" radius={[6, 6, 0, 0]} />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="h-[200px]">
+      <Bar data={chartData} options={options} />
+    </div>
   )
 }

@@ -39,7 +39,6 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
   const { categories } = useCategories(type === 'transfer' ? undefined : type)
   const supabase = createClient()
 
-  // Set defaults when data loads
   useEffect(() => {
     if (wallets.length > 0 && !walletId) setWalletId(wallets[0].id)
   }, [wallets])
@@ -80,7 +79,7 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
   return (
     <div className="space-y-4">
       {/* Type Tabs */}
-      <div className="flex bg-gray-100 rounded-2xl p-1">
+      <div className="flex bg-muted rounded-2xl p-1">
         {TABS.map(tab => (
           <button
             key={tab.value}
@@ -88,8 +87,8 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
             className={cn(
               'flex-1 py-2 rounded-xl text-sm font-medium transition-all',
               type === tab.value
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             {tab.label}
@@ -99,28 +98,24 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
 
       {/* Amount Display */}
       <div className="text-center py-4">
-        <p className="text-xs text-gray-400 mb-1">
+        <p className="text-xs text-muted-foreground mb-1">
           {selectedWallet ? `From: ${selectedWallet.name}` : 'Select wallet'}
         </p>
         <p className={cn(
           'text-4xl font-bold',
-          type === 'income' ? 'text-emerald-600' : type === 'transfer' ? 'text-blue-600' : 'text-red-500'
+          type === 'income' ? 'text-emerald-600' : type === 'transfer' ? 'text-blue-600' : 'text-destructive'
         )}>
           {formatCurrency(parseFloat(amount) || 0)}
         </p>
       </div>
 
-      {/* Numeric Keypad */}
       <NumericKeypad value={amount} onChange={setAmount} />
 
-      {/* Details */}
       <div className="space-y-3 pt-2">
         <Select value={walletId} onChange={e => setWalletId(e.target.value)} label={type === 'transfer' ? 'From Wallet' : 'Wallet'}>
           <option value="">Select wallet</option>
           {wallets.map(w => (
-            <option key={w.id} value={w.id}>
-              {w.name} ({formatCurrency(w.balance)})
-            </option>
+            <option key={w.id} value={w.id}>{w.name} ({formatCurrency(w.balance)})</option>
           ))}
         </Select>
 
@@ -128,9 +123,7 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
           <Select value={toWalletId} onChange={e => setToWalletId(e.target.value)} label="To Wallet">
             <option value="">Select destination</option>
             {wallets.filter(w => w.id !== walletId).map(w => (
-              <option key={w.id} value={w.id}>
-                {w.name} ({formatCurrency(w.balance)})
-              </option>
+              <option key={w.id} value={w.id}>{w.name} ({formatCurrency(w.balance)})</option>
             ))}
           </Select>
         )}
@@ -145,35 +138,31 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Note (optional)</label>
+          <label className="block text-sm font-medium text-foreground mb-1.5">Note (optional)</label>
           <input
             value={note}
             onChange={e => setNote(e.target.value)}
             placeholder="Add a note..."
-            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2.5 bg-muted border border-input rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Date</label>
+          <label className="block text-sm font-medium text-foreground mb-1.5">Date</label>
           <input
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2.5 bg-muted border border-input rounded-xl text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           />
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="flex gap-3 pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
-          Cancel
-        </Button>
-        <Button onClick={handleSubmit} loading={loading} className="flex-1">
-          Save Transaction
-        </Button>
+        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">Cancel</Button>
+        <Button onClick={handleSubmit} loading={loading} className="flex-1">Save Transaction</Button>
       </div>
     </div>
   )

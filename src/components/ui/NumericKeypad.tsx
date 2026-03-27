@@ -1,6 +1,7 @@
 'use client'
 
 import { Delete } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface NumericKeypadProps {
   value: string
@@ -18,16 +19,10 @@ export default function NumericKeypad({ value, onChange }: NumericKeypadProps) {
       onChange(value + '.')
       return
     }
-    // Max 10 digits + 2 decimal places
     const [int, dec] = (value === '0' ? '' : value).split('.')
     if (dec !== undefined && dec.length >= 2) return
     if (!dec && int && int.length >= 10) return
-
-    if (value === '0' && key !== '.') {
-      onChange(key)
-    } else {
-      onChange(value + key)
-    }
+    onChange(value === '0' && key !== '.' ? key : value + key)
   }
 
   const keys = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', 'del']
@@ -39,14 +34,12 @@ export default function NumericKeypad({ value, onChange }: NumericKeypadProps) {
           key={key}
           type="button"
           onClick={() => handleKey(key)}
-          className={`
-            flex items-center justify-center h-14 rounded-2xl text-xl font-medium
-            transition-all active:scale-95
-            ${key === 'del'
-              ? 'bg-red-50 text-red-500'
-              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-            }
-          `}
+          className={cn(
+            'flex items-center justify-center h-14 rounded-2xl text-xl font-medium transition-all active:scale-95',
+            key === 'del'
+              ? 'bg-destructive/10 text-destructive hover:bg-destructive/20'
+              : 'bg-muted text-foreground hover:bg-muted/70'
+          )}
         >
           {key === 'del' ? <Delete className="w-5 h-5" /> : key}
         </button>

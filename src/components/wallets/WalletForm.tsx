@@ -85,7 +85,7 @@ export default function WalletForm({ wallet, userId, onSuccess, onCancel }: Wall
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+        <label className="block text-sm font-medium text-foreground mb-2">Color</label>
         <div className="flex flex-wrap gap-2">
           {WALLET_COLORS.map(c => (
             <button
@@ -103,7 +103,7 @@ export default function WalletForm({ wallet, userId, onSuccess, onCancel }: Wall
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="flex gap-3 pt-2">
         <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">

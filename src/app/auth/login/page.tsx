@@ -64,30 +64,30 @@ export default function LoginPage() {
   const isEmail = mode === 'signin' || mode === 'signup'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-purple-500/10 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl mb-4 shadow-lg shadow-indigo-200">
-            <TrendingUp className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg shadow-primary/30">
+            <TrendingUp className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">ExpenseFlow</h1>
-          <p className="text-gray-500 mt-2">Smart expense management</p>
+          <h1 className="text-3xl font-bold text-foreground">ExpenseFlow</h1>
+          <p className="text-muted-foreground mt-2">Smart expense management</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-3xl shadow-xl shadow-gray-100 p-8">
+        <div className="bg-card rounded-3xl shadow-xl p-8 border border-border">
           {mode === 'choose' && (
             <>
-              <h2 className="text-xl font-semibold text-gray-800 mb-1">Welcome back</h2>
-              <p className="text-gray-500 text-sm mb-7">
+              <h2 className="text-xl font-semibold text-foreground mb-1">Welcome back</h2>
+              <p className="text-muted-foreground text-sm mb-7">
                 Sign in to manage your finances across all devices.
               </p>
 
               {/* Google */}
               <button
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-95"
+                className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-background border-2 border-border rounded-2xl text-foreground font-medium hover:bg-muted transition-all active:scale-95"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -99,30 +99,30 @@ export default function LoginPage() {
               </button>
 
               <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px bg-gray-100" />
-                <span className="text-xs text-gray-400 font-medium">or</span>
-                <div className="flex-1 h-px bg-gray-100" />
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-xs text-muted-foreground font-medium">or</span>
+                <div className="flex-1 h-px bg-border" />
               </div>
 
               {/* Email options */}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => { setMode('signin'); setError('') }}
-                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-indigo-100 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors"
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-primary/20 bg-primary/10 text-primary text-sm font-semibold hover:bg-primary/15 transition-colors"
                 >
                   <Mail className="w-4 h-4" />
                   Sign in
                 </button>
                 <button
                   onClick={() => { setMode('signup'); setError('') }}
-                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-border text-muted-foreground text-sm font-semibold hover:bg-muted transition-colors"
                 >
                   <ArrowRight className="w-4 h-4" />
                   Sign up
                 </button>
               </div>
 
-              <p className="text-center text-xs text-gray-400 mt-6">
+              <p className="text-center text-xs text-muted-foreground mt-6">
                 By continuing, you agree to our Terms of Service and Privacy Policy.
               </p>
             </>
@@ -132,15 +132,15 @@ export default function LoginPage() {
             <>
               <button
                 onClick={() => { setMode('choose'); setError(''); setSuccessMsg('') }}
-                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 mb-5 -mt-1 transition-colors"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-5 -mt-1 transition-colors"
               >
                 ← Back
               </button>
 
-              <h2 className="text-xl font-semibold text-gray-800 mb-1">
+              <h2 className="text-xl font-semibold text-foreground mb-1">
                 {mode === 'signin' ? 'Sign in with Email' : 'Create Account'}
               </h2>
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-muted-foreground text-sm mb-6">
                 {mode === 'signin'
                   ? 'Use your email and password to sign in.'
                   : 'Create a new account with email and password.'}
@@ -155,9 +155,9 @@ export default function LoginPage() {
                 <div className="space-y-4">
                   {/* Email */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Email</label>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">Email</label>
                     <div className="relative">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <input
                         type="email"
                         value={email}
@@ -165,16 +165,16 @@ export default function LoginPage() {
                         onKeyDown={e => e.key === 'Enter' && (mode === 'signin' ? handleEmailSignIn() : handleEmailSignUp())}
                         placeholder="you@example.com"
                         autoComplete="email"
-                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-3 bg-muted border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                     </div>
                   </div>
 
                   {/* Password */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Password</label>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">Password</label>
                     <div className="relative">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <input
                         type={showPass ? 'text' : 'password'}
                         value={password}
@@ -182,12 +182,12 @@ export default function LoginPage() {
                         onKeyDown={e => e.key === 'Enter' && (mode === 'signin' ? handleEmailSignIn() : handleEmailSignUp())}
                         placeholder={mode === 'signup' ? 'Min. 8 characters' : '••••••••'}
                         autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                        className="w-full pl-10 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="w-full pl-10 pr-11 py-3 bg-muted border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPass(v => !v)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                       >
                         {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -195,8 +195,8 @@ export default function LoginPage() {
                   </div>
 
                   {error && (
-                    <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2.5">
-                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 rounded-xl px-3 py-2.5">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                       <span>{error}</span>
                     </div>
                   )}
@@ -206,7 +206,7 @@ export default function LoginPage() {
                     disabled={loading}
                     className={cn(
                       'w-full py-3 rounded-2xl font-semibold text-sm transition-all active:scale-95 disabled:opacity-60',
-                      'bg-indigo-600 hover:bg-indigo-700 text-white'
+                      'bg-primary hover:bg-primary/90 text-primary-foreground'
                     )}
                   >
                     {loading
@@ -214,16 +214,16 @@ export default function LoginPage() {
                       : (mode === 'signin' ? 'Sign in' : 'Create Account')}
                   </button>
 
-                  <p className="text-center text-xs text-gray-400">
+                  <p className="text-center text-xs text-muted-foreground">
                     {mode === 'signin' ? (
                       <>Don&apos;t have an account?{' '}
-                        <button onClick={() => { setMode('signup'); setError('') }} className="text-indigo-600 font-semibold hover:underline">
+                        <button onClick={() => { setMode('signup'); setError('') }} className="text-primary font-semibold hover:underline">
                           Sign up
                         </button>
                       </>
                     ) : (
                       <>Already have an account?{' '}
-                        <button onClick={() => { setMode('signin'); setError('') }} className="text-indigo-600 font-semibold hover:underline">
+                        <button onClick={() => { setMode('signin'); setError('') }} className="text-primary font-semibold hover:underline">
                           Sign in
                         </button>
                       </>
@@ -238,11 +238,11 @@ export default function LoginPage() {
         {/* Features */}
         <div className="grid grid-cols-3 gap-4 mt-8 text-center">
           {features.map((f) => (
-            <div key={f.label} className="bg-white/60 rounded-2xl p-3">
+            <div key={f.label} className="bg-card/60 rounded-2xl p-3 border border-border/50">
               <div className="flex justify-center mb-1.5">
-                <f.icon className="w-5 h-5 text-indigo-500" />
+                <f.icon className="w-5 h-5 text-primary" />
               </div>
-              <p className="text-xs text-gray-500 font-medium">{f.label}</p>
+              <p className="text-xs text-muted-foreground font-medium">{f.label}</p>
             </div>
           ))}
         </div>

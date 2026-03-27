@@ -1,32 +1,49 @@
+import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
-import { ButtonHTMLAttributes, forwardRef } from 'react'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline'
-  size?: 'sm' | 'md' | 'lg'
+const buttonVariants = cva(
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  {
+    variants: {
+      variant: {
+        default:     'bg-primary text-primary-foreground shadow hover:bg-primary/90',
+        destructive: 'bg-destructive text-white shadow hover:bg-destructive/90',
+        outline:     'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
+        secondary:   'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
+        ghost:       'hover:bg-accent hover:text-accent-foreground',
+        link:        'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-9 px-4 py-2',
+        sm:      'h-8 rounded-md px-3 text-xs',
+        lg:      'h-10 rounded-lg px-6',
+        icon:    'h-9 w-9',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
   loading?: boolean
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, loading, disabled, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button'
     return (
-      <button
+      <Comp
         ref={ref}
         disabled={disabled || loading}
-        className={cn(
-          'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
-          {
-            'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm': variant === 'primary',
-            'bg-gray-100 text-gray-800 hover:bg-gray-200': variant === 'secondary',
-            'text-gray-600 hover:bg-gray-100': variant === 'ghost',
-            'bg-red-500 text-white hover:bg-red-600': variant === 'danger',
-            'border-2 border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50': variant === 'outline',
-            'text-xs px-3 py-1.5': size === 'sm',
-            'text-sm px-4 py-2.5': size === 'md',
-            'text-base px-6 py-3.5': size === 'lg',
-          },
-          className
-        )}
+        className={cn(buttonVariants({ variant, size, className }))}
         {...props}
       >
         {loading ? (
@@ -36,10 +53,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </svg>
         ) : null}
         {children}
-      </button>
+      </Comp>
     )
   }
 )
-
 Button.displayName = 'Button'
+
+export { Button, buttonVariants }
 export default Button

@@ -50,7 +50,7 @@ export default function DebtForm({ userId, onSuccess, onCancel }: DebtFormProps)
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Type Toggle */}
-      <div className="flex bg-gray-100 rounded-2xl p-1">
+      <div className="flex bg-muted rounded-2xl p-1">
         {(['borrow', 'lend'] as const).map(t => (
           <button
             key={t}
@@ -58,7 +58,7 @@ export default function DebtForm({ userId, onSuccess, onCancel }: DebtFormProps)
             onClick={() => setType(t)}
             className={cn(
               'flex-1 py-2.5 rounded-xl text-sm font-medium transition-all',
-              type === t ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+              type === t ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
             )}
           >
             <span className="flex items-center justify-center gap-1.5">
@@ -69,51 +69,20 @@ export default function DebtForm({ userId, onSuccess, onCancel }: DebtFormProps)
         ))}
       </div>
 
-      <p className="text-xs text-gray-400 text-center">
-        {type === 'borrow' ? "You owe someone money" : "Someone owes you money"}
+      <p className="text-xs text-muted-foreground text-center">
+        {type === 'borrow' ? 'You owe someone money' : 'Someone owes you money'}
       </p>
 
-      <Input
-        label="Person's Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        placeholder="e.g. John Doe"
-        autoFocus
-      />
+      <Input label="Person's Name" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. John Doe" autoFocus />
+      <Input label="Amount" type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0.00" min="0.01" step="0.01" />
+      <Input label="Note (optional)" value={note} onChange={e => setNote(e.target.value)} placeholder="What is this for?" />
+      <Input label="Due Date (optional)" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
 
-      <Input
-        label="Amount"
-        type="number"
-        value={amount}
-        onChange={e => setAmount(e.target.value)}
-        placeholder="0.00"
-        min="0.01"
-        step="0.01"
-      />
-
-      <Input
-        label="Note (optional)"
-        value={note}
-        onChange={e => setNote(e.target.value)}
-        placeholder="What is this for?"
-      />
-
-      <Input
-        label="Due Date (optional)"
-        type="date"
-        value={dueDate}
-        onChange={e => setDueDate(e.target.value)}
-      />
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="flex gap-3 pt-2">
-        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
-          Cancel
-        </Button>
-        <Button type="submit" loading={loading} className="flex-1">
-          Add Debt
-        </Button>
+        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">Cancel</Button>
+        <Button type="submit" loading={loading} className="flex-1">Add Debt</Button>
       </div>
     </form>
   )

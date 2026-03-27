@@ -42,9 +42,9 @@ export default function WalletsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Wallets</h1>
-          <p className="text-gray-500 text-sm mt-0.5">
-            Total: <span className="font-semibold text-indigo-600">{formatAmount(totalBalance)}</span>
+          <h1 className="text-2xl font-bold text-foreground">Wallets</h1>
+          <p className="text-muted-foreground text-sm mt-0.5">
+            Total: <span className="font-semibold text-primary">{formatAmount(totalBalance)}</span>
           </p>
         </div>
         <Button onClick={() => setShowForm(true)} size="sm">
@@ -107,7 +107,7 @@ export default function WalletsPage() {
       >
         <div className="space-y-4">
           <div className="flex items-start gap-3 p-4 bg-red-50 rounded-2xl">
-            <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
             <p className="text-sm text-red-700">
               Are you sure you want to delete <strong>{deleteWallet?.name}</strong>? All associated transactions will also be deleted.
             </p>

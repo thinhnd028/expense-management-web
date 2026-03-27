@@ -39,7 +39,6 @@ export default function RepaymentForm({ debt, onSuccess, onCancel }: RepaymentFo
 
     if (err) { setError(err.message); setLoading(false); return }
 
-    // Auto-mark as paid if fully paid
     if (num >= remaining) {
       await supabase.from('debts').update({ status: 'paid' }).eq('id', debt.id)
     }
@@ -50,23 +49,22 @@ export default function RepaymentForm({ debt, onSuccess, onCancel }: RepaymentFo
 
   return (
     <div className="space-y-4">
-      <div className="bg-gray-50 rounded-2xl p-4">
+      <div className="bg-muted rounded-2xl p-4">
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-sm font-medium text-gray-800">{debt.name}</p>
-            <p className="text-xs text-gray-400">{debt.type === 'borrow' ? 'You owe' : 'They owe you'}</p>
+            <p className="text-sm font-medium text-foreground">{debt.name}</p>
+            <p className="text-xs text-muted-foreground">{debt.type === 'borrow' ? 'You owe' : 'They owe you'}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm font-bold text-gray-900">{formatAmount(remaining)}</p>
-            <p className="text-xs text-gray-400">remaining</p>
+            <p className="text-sm font-bold text-foreground">{formatAmount(remaining)}</p>
+            <p className="text-xs text-muted-foreground">remaining</p>
           </div>
         </div>
       </div>
 
-      {/* Amount display */}
       <div className="text-center py-3">
-        <p className="text-xs text-gray-400 mb-1">Payment amount</p>
-        <p className="text-4xl font-bold text-indigo-600">
+        <p className="text-xs text-muted-foreground mb-1">Payment amount</p>
+        <p className="text-4xl font-bold text-primary">
           {formatAmount(parseFloat(amount) || 0)}
         </p>
       </div>
@@ -74,46 +72,38 @@ export default function RepaymentForm({ debt, onSuccess, onCancel }: RepaymentFo
       <NumericKeypad value={amount} onChange={setAmount} />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Note (optional)</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">Note (optional)</label>
         <input
           value={note}
           onChange={e => setNote(e.target.value)}
           placeholder="e.g. Cash payment"
-          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-4 py-2.5 bg-muted border border-input rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-ring"
         />
       </div>
 
-      {/* Quick fill buttons */}
       <div className="flex gap-2">
-        <button
-          onClick={() => setAmount(String(remaining / 4))}
-          className="flex-1 py-2 rounded-xl bg-gray-100 text-xs font-medium text-gray-600 hover:bg-gray-200 transition-colors"
-        >
-          25%
-        </button>
-        <button
-          onClick={() => setAmount(String(remaining / 2))}
-          className="flex-1 py-2 rounded-xl bg-gray-100 text-xs font-medium text-gray-600 hover:bg-gray-200 transition-colors"
-        >
-          50%
-        </button>
+        {[{ label: '25%', val: remaining / 4 }, { label: '50%', val: remaining / 2 }].map(({ label, val }) => (
+          <button
+            key={label}
+            onClick={() => setAmount(String(val))}
+            className="flex-1 py-2 rounded-xl bg-muted text-xs font-medium text-muted-foreground hover:bg-muted/70 transition-colors"
+          >
+            {label}
+          </button>
+        ))}
         <button
           onClick={() => setAmount(String(remaining))}
-          className="flex-1 py-2 rounded-xl bg-indigo-100 text-xs font-medium text-indigo-700 hover:bg-indigo-200 transition-colors"
+          className="flex-1 py-2 rounded-xl bg-primary/10 text-xs font-medium text-primary hover:bg-primary/15 transition-colors"
         >
           Full
         </button>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="flex gap-3">
-        <Button variant="secondary" onClick={onCancel} className="flex-1">
-          Cancel
-        </Button>
-        <Button onClick={handleSubmit} loading={loading} className="flex-1">
-          Record Payment
-        </Button>
+        <Button variant="secondary" onClick={onCancel} className="flex-1">Cancel</Button>
+        <Button onClick={handleSubmit} loading={loading} className="flex-1">Record Payment</Button>
       </div>
     </div>
   )

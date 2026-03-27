@@ -102,8 +102,8 @@ export default function DashboardPage() {
       {/* Greeting */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-gray-400 text-sm">{greeting()},</p>
-          <h1 className="text-2xl font-bold text-gray-900">{userName}</h1>
+          <p className="text-muted-foreground text-sm">{greeting()},</p>
+          <h1 className="text-2xl font-bold text-foreground">{userName}</h1>
         </div>
         <Button onClick={() => setShowForm(true)} size="sm">
           <Plus className="w-4 h-4" />
@@ -112,20 +112,20 @@ export default function DashboardPage() {
       </div>
 
       {/* Total Balance Hero */}
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-br from-primary to-purple-700 rounded-3xl p-6 text-white relative overflow-hidden">
         <div className="absolute right-0 top-0 w-48 h-48 rounded-full bg-white/10 translate-x-16 -translate-y-16" />
         <div className="absolute left-0 bottom-0 w-32 h-32 rounded-full bg-white/10 -translate-x-10 translate-y-10" />
         <div className="relative">
-          <p className="text-indigo-200 text-sm font-medium">Total Balance</p>
+          <p className="text-white/70 text-sm font-medium">Total Balance</p>
           <p className="text-4xl font-bold mt-1 mb-4">{formatAmount(totalBalance)}</p>
           <div className="flex gap-4">
             <div>
-              <p className="text-indigo-200 text-xs">Monthly Income</p>
+              <p className="text-white/70 text-xs">Monthly Income</p>
               <p className="font-semibold text-emerald-300">{formatAmount(stats.income)}</p>
             </div>
             <div className="w-px bg-white/20" />
             <div>
-              <p className="text-indigo-200 text-xs">Monthly Expense</p>
+              <p className="text-white/70 text-xs">Monthly Expense</p>
               <p className="font-semibold text-red-300">{formatAmount(stats.expense)}</p>
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Income vs Expense</CardTitle>
-            <span className="text-xs text-gray-400">Last 6 months</span>
+            <span className="text-xs text-muted-foreground">Last 6 months</span>
           </CardHeader>
           <IncomeExpenseChart data={chartData} />
         </Card>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Spending by Category</CardTitle>
-            <span className="text-xs text-gray-400">This month</span>
+            <span className="text-xs text-muted-foreground">This month</span>
           </CardHeader>
           <CategoryPieChart data={categoryData} />
         </Card>
@@ -166,7 +166,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Wallets</CardTitle>
-            <Link href="/wallets" className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
+            <Link href="/wallets" className="text-xs text-primary hover:text-primary/80 font-medium flex items-center gap-1">
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </CardHeader>
@@ -174,15 +174,15 @@ export default function DashboardPage() {
             {wallets.map(w => {
               const WIcon = WALLET_ICONS_MAP[w.type] ?? Banknote
               return (
-                <div key={w.id} className="rounded-xl p-3 border border-gray-100 bg-gray-50">
+                <div key={w.id} className="rounded-xl p-3 border border-border bg-muted/50">
                   <div
                     className="w-8 h-8 rounded-lg mb-2 flex items-center justify-center"
                     style={{ backgroundColor: w.color + '22' }}
                   >
                     <WIcon className="w-4 h-4" style={{ color: w.color }} />
                   </div>
-                  <p className="text-xs text-gray-500 truncate">{w.name}</p>
-                  <p className="font-bold text-gray-900 text-sm">{formatAmount(w.balance)}</p>
+                  <p className="text-xs text-muted-foreground truncate">{w.name}</p>
+                  <p className="font-bold text-foreground text-sm">{formatAmount(w.balance)}</p>
                 </div>
               )
             })}
@@ -194,14 +194,14 @@ export default function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>Recent Transactions</CardTitle>
-          <Link href="/transactions" className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
+          <Link href="/transactions" className="text-xs text-primary hover:text-primary/80 font-medium flex items-center gap-1">
             View all <ArrowRight className="w-3 h-3" />
           </Link>
         </CardHeader>
         {transactions.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-6">No transactions yet</p>
+          <p className="text-sm text-muted-foreground text-center py-6">No transactions yet</p>
         ) : (
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-border">
             {transactions.map(tx => (
               <TransactionItem key={tx.id} transaction={tx} />
             ))}

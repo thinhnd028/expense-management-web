@@ -47,7 +47,7 @@ export default function TransactionsPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+        <h1 className="text-2xl font-bold text-foreground">Transactions</h1>
         <Button onClick={() => setShowForm(true)} size="sm">
           <Plus className="w-4 h-4" />
           Add
@@ -55,17 +55,17 @@ export default function TransactionsPage() {
       </div>
 
       {/* Month Selector */}
-      <div className="flex items-center justify-between bg-white rounded-2xl px-4 py-3 border border-gray-100">
+      <div className="flex items-center justify-between bg-card rounded-2xl px-4 py-3 border border-border">
         <button
           onClick={() => changeMonth(-1)}
-          className="p-2 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors"
+          className="p-2 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
         >
           ‹
         </button>
-        <span className="font-medium text-gray-800 text-sm">{monthStr}</span>
+        <span className="font-medium text-foreground text-sm">{monthStr}</span>
         <button
           onClick={() => changeMonth(1)}
-          className="p-2 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors"
+          className="p-2 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
           disabled={month >= new Date()}
         >
           ›
@@ -76,7 +76,7 @@ export default function TransactionsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="h-16 bg-gray-100 rounded-2xl animate-pulse" />
+            <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />
           ))}
         </div>
       ) : Object.keys(grouped).length === 0 ? (
@@ -95,8 +95,8 @@ export default function TransactionsPage() {
         <div className="space-y-4">
           {Object.entries(grouped).map(([date, txs]) => (
             <Card key={date}>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{date}</p>
-              <div className="divide-y divide-gray-50">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{date}</p>
+              <div className="divide-y divide-border">
                 {txs.map(tx => (
                   <TransactionItem key={tx.id} transaction={tx} onDelete={handleDelete} />
                 ))}

@@ -51,7 +51,7 @@ export default function DebtsPage() {
     <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Debts</h1>
+        <h1 className="text-2xl font-bold text-foreground">Debts</h1>
         <Button onClick={() => setShowForm(true)} size="sm">
           <Plus className="w-4 h-4" />
           Add Debt
@@ -73,14 +73,14 @@ export default function DebtsPage() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex bg-gray-100 rounded-2xl p-1">
+      <div className="flex bg-muted rounded-2xl p-1">
         {(['all', 'borrow', 'lend'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={cn(
               'flex-1 py-2 rounded-xl text-sm font-medium transition-all capitalize',
-              activeTab === tab ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'
+              activeTab === tab ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
             )}
           >
             {tab === 'all' ? 'All' : tab === 'borrow' ? 'I Owe' : 'Owed to Me'}
@@ -91,7 +91,7 @@ export default function DebtsPage() {
       {/* List */}
       {loading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-32 bg-muted rounded-2xl animate-pulse" />)}
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
@@ -104,7 +104,7 @@ export default function DebtsPage() {
         <div className="space-y-4">
           {unpaid.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Outstanding</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Outstanding</p>
               <div className="space-y-3">
                 {unpaid.map(debt => (
                   <DebtCard
@@ -120,7 +120,7 @@ export default function DebtsPage() {
           )}
           {paid.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Settled</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Settled</p>
               <div className="space-y-3">
                 {paid.map(debt => (
                   <DebtCard

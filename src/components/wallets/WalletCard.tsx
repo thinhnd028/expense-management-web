@@ -11,8 +11,6 @@ const WALLET_ICONS = {
   'e-wallet': Smartphone,
 }
 
-const MOMO_COLOR = '#AE2070'
-
 interface WalletCardProps {
   wallet: Wallet
   onEdit?: (wallet: Wallet) => void
@@ -22,8 +20,6 @@ interface WalletCardProps {
 export default function WalletCard({ wallet, onEdit, onDelete }: WalletCardProps) {
   const WalletIcon = WALLET_ICONS[wallet.type] ?? Banknote
   const { formatAmount } = useCurrency()
-
-  const isMomo = wallet.name === 'MoMo' && wallet.color === MOMO_COLOR
 
   return (
     <div
@@ -38,15 +34,8 @@ export default function WalletCard({ wallet, onEdit, onDelete }: WalletCardProps
         <div className="flex items-start justify-between mb-4">
           <div>
             <div className="flex items-center gap-1.5 text-white/70 text-xs font-medium uppercase tracking-wider">
-              {isMomo ? (
-                /* MoMo "M" badge */
-                <span className="w-4 h-4 flex items-center justify-center bg-white/30 rounded-full text-white font-bold text-[10px]">
-                  M
-                </span>
-              ) : (
-                <WalletIcon className="w-3.5 h-3.5" />
-              )}
-              {isMomo ? 'MoMo E-Wallet' : WALLET_TYPE_LABELS[wallet.type]}
+              <WalletIcon className="w-3.5 h-3.5" />
+              {WALLET_TYPE_LABELS[wallet.type]}
             </div>
             <p className="font-semibold text-lg mt-0.5">{wallet.name}</p>
           </div>
@@ -60,8 +49,7 @@ export default function WalletCard({ wallet, onEdit, onDelete }: WalletCardProps
                 <Pencil className="w-3.5 h-3.5" />
               </button>
             )}
-            {onDelete && !isMomo && (
-              /* MoMo wallet is managed via Settings, not directly deletable */
+            {onDelete && (
               <button
                 onClick={() => onDelete(wallet)}
                 className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
@@ -73,10 +61,6 @@ export default function WalletCard({ wallet, onEdit, onDelete }: WalletCardProps
         </div>
 
         <p className="text-2xl font-bold">{formatAmount(wallet.balance)}</p>
-
-        {isMomo && (
-          <p className="text-white/60 text-xs mt-1">Manage in Settings → MoMo</p>
-        )}
       </div>
     </div>
   )

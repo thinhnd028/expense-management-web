@@ -4,78 +4,67 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Wallet, ArrowLeftRight, Users,
-  TrendingUp, Settings, ShoppingBag, Building2,
+  TrendingUp, Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import {
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 export const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/wallets', icon: Wallet, label: 'Wallets' },
   { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { href: '/debts', icon: Users, label: 'Debts' },
-  { href: '/shopee', icon: ShoppingBag, label: 'Shopee' },
-  { href: '/sepay', icon: Building2, label: 'SePay' },
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <TooltipProvider>
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r border-border bg-background sm:flex">
-        {/* Logo + main nav */}
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-          <Link
-            href="/"
-            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-          >
-            <TrendingUp className="h-4 w-4 transition-all group-hover:scale-110" />
-            <span className="sr-only">ExpenseFlow</span>
-          </Link>
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-56 flex-col border-r border-sidebar-border bg-sidebar sm:flex">
+      {/* Logo */}
+      <div className="flex h-14 items-center gap-2.5 px-5 border-b border-sidebar-border">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-primary">
+          <TrendingUp className="h-4 w-4 text-sidebar-primary-foreground" />
+        </div>
+        <span className="font-semibold text-sm text-sidebar-foreground">ExpenseFlow</span>
+      </div>
 
-          {navItems.map((item) => {
-            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
-            return (
-              <Tooltip key={item.href}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      'flex h-9 w-9 items-center justify-center rounded-lg transition-colors md:h-8 md:w-8',
-                      isActive
-                        ? 'bg-accent text-black'
-                        : 'text-muted-foreground hover:text-foreground'
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span className="sr-only">{item.label}</span>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">{item.label}</TooltipContent>
-              </Tooltip>
-            )
-          })}
-        </nav>
+      {/* Main nav */}
+      <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
+        {navItems.map((item) => {
+          const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
+                  : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60'
+              )}
+            >
+              <item.icon className="h-4 w-4 shrink-0" />
+              {item.label}
+            </Link>
+          )
+        })}
+      </nav>
 
-        {/* Settings at bottom */}
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="/settings"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Settings</TooltipContent>
-          </Tooltip>
-        </nav>
-      </aside>
-    </TooltipProvider>
+      {/* Settings at bottom */}
+      <nav className="px-3 py-4 border-t border-sidebar-border">
+        <Link
+          href="/settings"
+          className={cn(
+            'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+            pathname.startsWith('/settings')
+              ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
+              : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60'
+          )}
+        >
+          <Settings className="h-4 w-4 shrink-0" />
+          Settings
+        </Link>
+      </nav>
+    </aside>
   )
 }

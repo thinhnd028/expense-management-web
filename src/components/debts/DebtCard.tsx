@@ -23,8 +23,8 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
 
   return (
     <div className={cn(
-      'bg-white rounded-2xl p-4 border shadow-sm transition-all',
-      isPaid ? 'border-gray-100 opacity-60' : isBorrow ? 'border-amber-100' : 'border-blue-100'
+      'bg-card rounded-2xl p-4 border shadow-sm transition-all',
+      isPaid ? 'border-border opacity-60' : isBorrow ? 'border-amber-200' : 'border-blue-200'
     )}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -35,7 +35,7 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
             {debt.name[0].toUpperCase()}
           </div>
           <div>
-            <p className="font-semibold text-gray-800 text-sm">{debt.name}</p>
+            <p className="font-semibold text-card-foreground text-sm">{debt.name}</p>
             <span className={cn(
               'text-xs px-2 py-0.5 rounded-full font-medium',
               isBorrow ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'
@@ -45,18 +45,18 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
           </div>
         </div>
         <div className="text-right">
-          <p className="font-bold text-gray-900">{formatAmount(debt.amount)}</p>
-          {!isPaid && <p className="text-xs text-gray-400">Remaining: {formatAmount(remaining)}</p>}
+          <p className="font-bold text-card-foreground">{formatAmount(debt.amount)}</p>
+          {!isPaid && <p className="text-xs text-muted-foreground">Remaining: {formatAmount(remaining)}</p>}
         </div>
       </div>
 
       {!isPaid && (
         <div className="mb-3">
-          <div className="flex justify-between text-xs text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-muted-foreground mb-1">
             <span>Paid: {formatAmount(paidAmount)}</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
             <div
               className={cn('h-full rounded-full transition-all', isBorrow ? 'bg-amber-400' : 'bg-blue-400')}
               style={{ width: `${Math.min(progress, 100)}%` }}
@@ -67,9 +67,9 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
 
       {(debt.note || debt.due_date) && (
         <div className="mb-3 space-y-1">
-          {debt.note && <p className="text-xs text-gray-500 truncate">{debt.note}</p>}
+          {debt.note && <p className="text-xs text-muted-foreground truncate">{debt.note}</p>}
           {debt.due_date && (
-            <div className="flex items-center gap-1 text-xs text-gray-400">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Calendar className="w-3 h-3" />
               Due: {formatDate(debt.due_date)}
             </div>
@@ -86,7 +86,7 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
         <div className="flex gap-2 mt-2">
           <button
             onClick={() => onRepay(debt)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-medium hover:bg-indigo-100 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-primary/10 text-primary text-xs font-medium hover:bg-primary/15 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             Record Payment
@@ -100,7 +100,7 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
           </button>
           <button
             onClick={() => onDelete(debt)}
-            className="p-2 rounded-xl bg-red-50 text-red-400 hover:bg-red-100 transition-colors"
+            className="p-2 rounded-xl bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
