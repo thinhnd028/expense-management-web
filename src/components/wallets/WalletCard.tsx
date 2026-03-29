@@ -2,7 +2,10 @@
 
 import { Wallet } from '@/types/database'
 import { useCurrency } from '@/contexts/CurrencyContext'
-import { Pencil, Trash2, Banknote, Building2, Smartphone, ArrowLeftRight } from 'lucide-react'
+import { Pencil, Trash2, Banknote, Building2, Smartphone, ArrowLeftRight, MoreHorizontal } from 'lucide-react'
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
 
 const WALLET_ICONS = {
   cash: Banknote,
@@ -30,26 +33,27 @@ export default function WalletCard({ wallet, onEdit, onDelete }: WalletCardProps
         >
           <WalletIcon className="w-6 h-6" style={{ color: wallet.color }} />
         </div>
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          {onEdit && (
-            <button
-              onClick={() => onEdit(wallet)}
-              className="p-1.5 hover:bg-[#e7e8e9] rounded-md text-[#454652] transition-colors"
-              title="Sửa"
-            >
-              <Pencil className="w-4 h-4" />
-            </button>
-          )}
-          {onDelete && (
-            <button
-              onClick={() => onDelete(wallet)}
-              className="p-1.5 hover:bg-[#ffdad6] rounded-md text-[#ba1a1a] transition-colors"
-              title="Xóa"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        {(onEdit || onDelete) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-1.5 hover:bg-[#e7e8e9] rounded-md text-[#454652] transition-colors opacity-0 group-hover:opacity-100">
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {onEdit && (
+                <DropdownMenuItem onClick={() => onEdit(wallet)} className="gap-2 cursor-pointer">
+                  <Pencil className="w-3.5 h-3.5" /> Sửa
+                </DropdownMenuItem>
+              )}
+              {onDelete && (
+                <DropdownMenuItem onClick={() => onDelete(wallet)} className="gap-2 cursor-pointer text-[#ba1a1a] focus:text-[#ba1a1a]">
+                  <Trash2 className="w-3.5 h-3.5" /> Xóa
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {/* Name + type */}

@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useTransactions, useMonthlyStats } from '@/hooks/useTransactions'
 import TransactionForm from '@/components/transactions/TransactionForm'
-import BottomSheet from '@/components/ui/BottomSheet'
 import EmptyState from '@/components/ui/EmptyState'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Badge } from '@/components/ui/badge'
 import { Plus, ReceiptText, TrendingUp, TrendingDown, Calendar, Tag, Layers, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react'
 import { formatDateShort } from '@/lib/utils'
 import { TransactionWithDetails } from '@/types/database'
@@ -252,13 +253,18 @@ export default function TransactionsPage() {
       )}
 
       {/* Add Form */}
-      <BottomSheet open={showForm} onClose={() => setShowForm(false)} title="Giao dịch mới">
-        <TransactionForm
-          userId={userId}
-          onSuccess={() => { setShowForm(false); refetch() }}
-          onCancel={() => setShowForm(false)}
-        />
-      </BottomSheet>
+      <Sheet open={showForm} onOpenChange={setShowForm}>
+        <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto rounded-t-2xl px-6 pb-8">
+          <SheetHeader className="px-0 pb-4">
+            <SheetTitle>Giao dịch mới</SheetTitle>
+          </SheetHeader>
+          <TransactionForm
+            userId={userId}
+            onSuccess={() => { setShowForm(false); refetch() }}
+            onCancel={() => setShowForm(false)}
+          />
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
@@ -299,9 +305,7 @@ function TransactionTableRow({
         </div>
       </td>
       <td className="px-6 py-5 hidden sm:table-cell">
-        <span className={`px-3 py-1 text-xs font-bold rounded-full ${categoryBg}`}>
-          {categoryName}
-        </span>
+        <Badge className={`border-none ${categoryBg}`}>{categoryName}</Badge>
       </td>
       <td className="px-6 py-5 text-sm text-[#454652] hidden md:table-cell">
         {(tx.wallets as { name: string } | null)?.name}

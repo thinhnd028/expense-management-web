@@ -8,6 +8,7 @@ import { TransactionType } from '@/types/database'
 import NumericKeypad from '@/components/ui/NumericKeypad'
 import Button from '@/components/ui/Button'
 import Select from '@/components/ui/Select'
+import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
@@ -138,7 +139,7 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
         )}
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">Note (optional)</label>
+          <Label className="block mb-1.5">Note (optional)</Label>
           <input
             value={note}
             onChange={e => setNote(e.target.value)}
@@ -148,7 +149,7 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">Date</label>
+          <Label className="block mb-1.5">Date</Label>
           <input
             type="date"
             value={date}

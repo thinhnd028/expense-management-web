@@ -4,6 +4,7 @@ import { DebtWithTransactions } from '@/types/database'
 import { formatDate } from '@/lib/utils'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { Check, Plus, Trash2, Calendar, User } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 interface DebtCardProps {
   debt: DebtWithTransactions
@@ -32,9 +33,9 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start mb-1">
             <h3 className="font-bold text-[#0e1c2b] text-base truncate">{debt.name}</h3>
-            <span className={`ml-2 shrink-0 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-tight rounded-full ${isBorrow ? 'bg-[#ffdad6] text-[#ba1a1a]' : 'bg-[#beead1] text-[#274e3d]'}`}>
+            <Badge className={`ml-2 shrink-0 border-none uppercase tracking-tight font-black ${isBorrow ? 'bg-[#ffdad6] text-[#ba1a1a]' : 'bg-[#beead1] text-[#274e3d]'}`}>
               {isBorrow ? 'Tôi đang nợ' : 'Người nợ tôi'}
-            </span>
+            </Badge>
           </div>
           <div className="flex items-center gap-4 text-xs text-[#454652]">
             <div className="flex items-center gap-1">

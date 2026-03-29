@@ -5,6 +5,7 @@ import { formatDateShort } from '@/lib/utils'
 import { ArrowRight, Trash2 } from 'lucide-react'
 import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useCurrency } from '@/contexts/CurrencyContext'
+import { Badge } from '@/components/ui/badge'
 
 interface TransactionItemProps {
   transaction: TransactionWithDetails
@@ -57,9 +58,9 @@ export default function TransactionItem({ transaction, onDelete }: TransactionIt
       </div>
 
       {/* Category chip */}
-      <span className={`hidden sm:inline-flex px-2.5 py-1 text-[10px] font-bold rounded-full uppercase tracking-wide shrink-0 ${categoryBg}`}>
+      <Badge className={`hidden sm:inline-flex uppercase tracking-wide shrink-0 border-none ${categoryBg}`}>
         {categoryName}
-      </span>
+      </Badge>
 
       {/* Date */}
       <span className="hidden md:block text-xs text-[#454652] shrink-0 tabular-nums">

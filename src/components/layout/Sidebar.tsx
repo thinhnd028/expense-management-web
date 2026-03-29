@@ -11,6 +11,8 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Profile } from '@/types/database'
+import { Separator } from '@/components/ui/separator'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
 
 export const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -40,6 +42,7 @@ export default function Sidebar() {
   }
 
   return (
+    <TooltipProvider>
     <aside className="hidden sm:flex fixed inset-y-0 left-0 z-10 w-64 flex-col bg-white border-r border-black/5 shrink-0">
       {/* Logo */}
       <div className="px-6 h-16 flex flex-col justify-center border-b border-black/5 shrink-0">
@@ -74,7 +77,8 @@ export default function Sidebar() {
       </nav>
 
       {/* User profile at bottom */}
-      <div className="px-4 pb-6 border-t border-black/5 pt-4">
+      <div className="px-4 pb-6 pt-4">
+        <Separator className="mb-4 bg-black/5" />
         <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#f3f4f5] transition-colors group">
           {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
@@ -89,14 +93,20 @@ export default function Sidebar() {
             </p>
             <p className="text-xs text-[#454652] mt-0.5">Premium Member</p>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="w-7 h-7 flex items-center justify-center rounded-md text-[#454652] hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleSignOut}
+                className="w-7 h-7 flex items-center justify-center rounded-md text-[#454652] hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">Đăng xuất</TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </aside>
+    </TooltipProvider>
   )
 }
