@@ -3,8 +3,7 @@
 import { DebtWithTransactions } from '@/types/database'
 import { formatDate } from '@/lib/utils'
 import { useCurrency } from '@/contexts/CurrencyContext'
-import { cn } from '@/lib/utils'
-import { Check, Plus, Trash2, Calendar } from 'lucide-react'
+import { Check, Plus, Trash2, Calendar, User } from 'lucide-react'
 
 interface DebtCardProps {
   debt: DebtWithTransactions
@@ -22,85 +21,89 @@ export default function DebtCard({ debt, onRepay, onMarkPaid, onDelete }: DebtCa
   const progress = debt.amount > 0 ? (paidAmount / debt.amount) * 100 : 0
 
   return (
-    <div className={cn(
-      'bg-card rounded-2xl p-4 border shadow-sm transition-all',
-      isPaid ? 'border-border opacity-60' : isBorrow ? 'border-amber-200' : 'border-blue-200'
-    )}>
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className={cn(
-            'w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold',
-            isBorrow ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-          )}>
-            {debt.name[0].toUpperCase()}
-          </div>
-          <div>
-            <p className="font-semibold text-card-foreground text-sm">{debt.name}</p>
-            <span className={cn(
-              'text-xs px-2 py-0.5 rounded-full font-medium',
-              isBorrow ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'
-            )}>
-              {isBorrow ? 'You owe' : 'Owes you'}
+    <div className="bg-white rounded-xl p-6 transition-all hover:bg-[#e7e8e9] border border-transparent hover:border-[#c6c5d4]/20 group">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        {/* Avatar icon */}
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0 ${isBorrow ? 'bg-[#233141]' : 'bg-[#3f6653]'}`}>
+          {debt.name[0].toUpperCase()}
+        </div>
+
+        {/* Details */}
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-start mb-1">
+            <h3 className="font-bold text-[#0e1c2b] text-base truncate">{debt.name}</h3>
+            <span className={`ml-2 shrink-0 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-tight rounded-full ${isBorrow ? 'bg-[#ffdad6] text-[#ba1a1a]' : 'bg-[#beead1] text-[#274e3d]'}`}>
+              {isBorrow ? 'Tôi đang nợ' : 'Người nợ tôi'}
             </span>
           </div>
+          <div className="flex items-center gap-4 text-xs text-[#454652]">
+            <div className="flex items-center gap-1">
+              <User className="w-3 h-3" />
+              <span>{isBorrow ? 'Khoản vay' : 'Cho vay'}</span>
+            </div>
+            {debt.due_date && (
+              <div className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                <span>Hạn: {formatDate(debt.due_date)}</span>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="text-right">
-          <p className="font-bold text-card-foreground">{formatAmount(debt.amount)}</p>
-          {!isPaid && <p className="text-xs text-muted-foreground">Remaining: {formatAmount(remaining)}</p>}
+
+        {/* Amount */}
+        <div className="sm:text-right shrink-0">
+          <p className="font-headline text-lg font-bold text-[#0e1c2b] tabular-nums">{formatAmount(debt.amount)}</p>
+          {!isPaid && remaining < debt.amount && (
+            <p className="text-xs text-[#454652]">Còn: {formatAmount(remaining)}</p>
+          )}
         </div>
       </div>
 
+      {/* Progress bar */}
       {!isPaid && (
-        <div className="mb-3">
-          <div className="flex justify-between text-xs text-muted-foreground mb-1">
-            <span>Paid: {formatAmount(paidAmount)}</span>
-            <span>{Math.round(progress)}%</span>
+        <div className="mt-5">
+          <div className="flex justify-between text-[10px] font-bold text-[#454652] uppercase tracking-widest mb-2">
+            <span>Tiến độ thanh toán</span>
+            <span className="tabular-nums">{Math.round(progress)}%</span>
           </div>
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-[#edeeef] rounded-full overflow-hidden">
             <div
-              className={cn('h-full rounded-full transition-all', isBorrow ? 'bg-amber-400' : 'bg-blue-400')}
+              className="h-full rounded-full transition-all duration-700 bg-[#0e1c2b]"
               style={{ width: `${Math.min(progress, 100)}%` }}
             />
           </div>
         </div>
       )}
 
-      {(debt.note || debt.due_date) && (
-        <div className="mb-3 space-y-1">
-          {debt.note && <p className="text-xs text-muted-foreground truncate">{debt.note}</p>}
-          {debt.due_date && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Calendar className="w-3 h-3" />
-              Due: {formatDate(debt.due_date)}
-            </div>
-          )}
-        </div>
+      {debt.note && (
+        <p className="mt-3 text-xs text-[#454652] truncate">{debt.note}</p>
       )}
 
+      {/* Actions */}
       {isPaid ? (
-        <div className="flex items-center gap-2 text-xs text-emerald-600 font-medium">
+        <div className="mt-4 flex items-center gap-2 text-xs text-[#3f6653] font-bold">
           <Check className="w-4 h-4" />
-          Fully paid
+          Đã thanh toán xong
         </div>
       ) : (
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 mt-5">
           <button
             onClick={() => onRepay(debt)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-primary/10 text-primary text-xs font-medium hover:bg-primary/15 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#f3f4f5] text-[#0e1c2b] text-xs font-bold hover:bg-[#e7e8e9] transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
-            Record Payment
+            Ghi nhận
           </button>
           <button
             onClick={() => onMarkPaid(debt)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-medium hover:bg-emerald-100 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#beead1] text-[#274e3d] text-xs font-bold hover:bg-[#a5d0b9] transition-colors"
           >
             <Check className="w-3.5 h-3.5" />
-            Mark Paid
+            Đã xong
           </button>
           <button
             onClick={() => onDelete(debt)}
-            className="p-2 rounded-xl bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
+            className="p-2 rounded-lg bg-[#ffdad6] text-[#ba1a1a] hover:bg-[#ffb3b1] transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

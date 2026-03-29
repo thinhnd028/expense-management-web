@@ -83,3 +83,15 @@ import { WALLET_COLORS } from '@/lib/utils'                 // reuse, don't inve
 - Extend existing types with interfaces when needed
 - Export convenience types at bottom of `database.ts` (e.g. `export type Wallet = ...`)
 - Props interfaces above the component, not inline
+
+---
+
+## Mobile layout
+
+Every page root element must include `pb-20 sm:pb-0` to prevent content from being hidden behind the bottom navigation bar on mobile:
+
+```tsx
+<div className="space-y-4 pb-20 sm:pb-0">
+  {/* page content */}
+</div>
+```

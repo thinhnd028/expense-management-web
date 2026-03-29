@@ -1,8 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
-import BottomNav from '@/components/layout/BottomNav'
 import MobileHeader from '@/components/layout/MobileHeader'
+import BottomNav from '@/components/layout/BottomNav'
 import { CurrencyProvider } from '@/contexts/CurrencyContext'
 import { DEFAULT_CURRENCY } from '@/lib/currency'
 
@@ -20,16 +20,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <CurrencyProvider currencyCode={profile?.currency ?? DEFAULT_CURRENCY}>
-      <main className="flex min-h-screen w-full flex-col bg-muted/40">
+      <div className="flex h-screen bg-[#f3f4f5] overflow-hidden">
         <Sidebar />
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-56">
+        <div className="flex flex-col flex-1 sm:ml-64 overflow-hidden">
           <MobileHeader profile={profile} />
-          <div className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 pb-24 sm:pb-8">
+          <main className="flex-1 overflow-y-auto p-6 sm:p-8">
             {children}
-          </div>
+          </main>
         </div>
         <BottomNav />
-      </main>
+      </div>
     </CurrencyProvider>
   )
 }

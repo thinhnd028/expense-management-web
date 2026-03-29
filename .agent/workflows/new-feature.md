@@ -49,11 +49,13 @@ export function use[Feature]() {
   const supabase = createClient()
   const [items, setItems] = useState<YourType[]>([])
   const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState('')
 
   const fetch = useCallback(async () => {
     setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setLoading(false); return }
+    setUserId(user.id)
     const { data } = await supabase
       .from('your_table')
       .select('*')
@@ -65,7 +67,7 @@ export function use[Feature]() {
 
   useEffect(() => { fetch() }, [fetch])
 
-  return { items, loading, refetch: fetch }
+  return { items, loading, refetch: fetch, userId }
 }
 ```
 
@@ -113,14 +115,13 @@ import [Feature]Card from '@/components/[feature]/[Feature]Card'
 import [Feature]Form from '@/components/[feature]/[Feature]Form'
 
 export default function [Feature]Page() {
-  const { items, loading, refetch } = use[Feature]()
-  const [userId, setUserId] = useState('')
+  const { items, loading, refetch, userId } = use[Feature]()
   const [showForm, setShowForm] = useState(false)
   const [editItem, setEditItem] = useState<YourType | null>(null)
   const [deleteItem, setDeleteItem] = useState<YourType | null>(null)
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-20 sm:pb-0">
       {/* Header row: title + add button */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Feature Name</h1>

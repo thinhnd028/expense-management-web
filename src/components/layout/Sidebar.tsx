@@ -4,32 +4,55 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Wallet, ArrowLeftRight, Users,
-  TrendingUp, Settings,
+  TrendingUp, Settings, LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Profile } from '@/types/database'
 
 export const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/wallets', icon: Wallet, label: 'Wallets' },
   { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { href: '/debts', icon: Users, label: 'Debts' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClient()
+  const [profile, setProfile] = useState<Profile | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      const { data: p } = await supabase.from('profiles').select('*').eq('id', data.user.id).single()
+      setProfile(p)
+    })
+  }, [])
+
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+  }
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-56 flex-col border-r border-sidebar-border bg-sidebar sm:flex">
+    <aside className="hidden sm:flex fixed inset-y-0 left-0 z-10 w-64 flex-col bg-white border-r border-black/5 shrink-0">
       {/* Logo */}
-      <div className="flex h-14 items-center gap-2.5 px-5 border-b border-sidebar-border">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-primary">
-          <TrendingUp className="h-4 w-4 text-sidebar-primary-foreground" />
+      <div className="px-6 h-16 flex flex-col justify-center border-b border-black/5 shrink-0">
+        <div className="flex items-center gap-2.5 mb-1">
+          <div className="w-8 h-8 rounded-lg hero-gradient flex items-center justify-center shrink-0">
+            <TrendingUp className="w-4 h-4 text-white" />
+          </div>
+          <span className="font-headline text-[17px] font-bold text-[#0e1c2b] tracking-tight">ExpenseFlow</span>
         </div>
-        <span className="font-semibold text-sm text-sidebar-foreground">ExpenseFlow</span>
       </div>
 
       {/* Main nav */}
-      <nav className="flex flex-col gap-1 px-3 py-4 flex-1">
+      <nav className="flex-1 px-4 pt-4 space-y-0.5">
         {navItems.map((item) => {
           const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
           return (
@@ -37,10 +60,10 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
-                  : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60'
+                  ? 'bg-[#0e1c2b] text-white'
+                  : 'text-[#454652] hover:text-[#0e1c2b] hover:bg-[#f3f4f5]'
               )}
             >
               <item.icon className="h-4 w-4 shrink-0" />
@@ -50,21 +73,30 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Settings at bottom */}
-      <nav className="px-3 py-4 border-t border-sidebar-border">
-        <Link
-          href="/settings"
-          className={cn(
-            'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-            pathname.startsWith('/settings')
-              ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
-              : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60'
+      {/* User profile at bottom */}
+      <div className="px-4 pb-6 border-t border-black/5 pt-4">
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#f3f4f5] transition-colors group">
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-[#e7e8e9] flex items-center justify-center text-[#0e1c2b] font-bold text-xs font-headline shrink-0">
+              {profile?.full_name?.[0]?.toUpperCase() || profile?.email?.[0]?.toUpperCase() || 'U'}
+            </div>
           )}
-        >
-          <Settings className="h-4 w-4 shrink-0" />
-          Settings
-        </Link>
-      </nav>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-[#191c1d] truncate leading-none">
+              {profile?.full_name || profile?.email || 'User'}
+            </p>
+            <p className="text-xs text-[#454652] mt-0.5">Premium Member</p>
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="w-7 h-7 flex items-center justify-center rounded-md text-[#454652] hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
     </aside>
   )
 }

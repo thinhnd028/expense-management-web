@@ -1,8 +1,7 @@
 'use client'
 
 import { TransactionWithDetails } from '@/types/database'
-import { formatDateShort, TRANSACTION_TYPE_COLORS } from '@/lib/utils'
-import { cn } from '@/lib/utils'
+import { formatDateShort } from '@/lib/utils'
 import { ArrowRight, Trash2 } from 'lucide-react'
 import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useCurrency } from '@/contexts/CurrencyContext'
@@ -19,51 +18,68 @@ export default function TransactionItem({ transaction, onDelete }: TransactionIt
 
   const fallbackIcon = isTransfer ? 'ArrowLeftRight' : isIncome ? 'TrendingUp' : 'TrendingDown'
   const iconName = transaction.categories?.icon || fallbackIcon
-  const iconColor = transaction.categories?.color || (isTransfer ? '#3b82f6' : isIncome ? '#10b981' : '#ef4444')
+  const categoryName = transaction.categories?.name || (isTransfer ? 'Chuyển khoản' : isIncome ? 'Thu nhập' : 'Chi tiêu')
+
+  const amountColor = isIncome ? 'text-[#3f6653]' : isTransfer ? 'text-[#0e1c2b]' : 'text-[#ba1a1a]'
+  const amountPrefix = isIncome ? '+' : isTransfer ? '' : '-'
+
+  const categoryBg = isIncome
+    ? 'bg-[#beead1] text-[#436b58]'
+    : isTransfer
+    ? 'bg-[#e7e8e9] text-[#454652]'
+    : 'bg-[#f3f4f5] text-[#454652]'
 
   return (
-    <div className="flex items-center gap-3 py-3">
-      <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ backgroundColor: `${iconColor}18` }}
-      >
-        <DynamicIcon name={iconName} className="w-5 h-5" style={{ color: iconColor }} />
+    <div className="flex items-center gap-4 px-6 py-4 hover:bg-[#e7e8e9] transition-colors cursor-pointer group">
+      {/* Icon */}
+      <div className="w-9 h-9 rounded-lg bg-[#e7e8e9] flex items-center justify-center shrink-0">
+        <DynamicIcon name={iconName} className="w-4 h-4 text-[#454652]" />
       </div>
 
+      {/* Description + wallet */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">
-          {transaction.categories?.name || (isTransfer ? 'Transfer' : transaction.note || 'Transaction')}
+        <p className="text-sm font-semibold text-[#191c1d] truncate">
+          {transaction.note || categoryName}
         </p>
         <div className="flex items-center gap-1.5 mt-0.5">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-[#454652]">
             {(transaction.wallets as { name: string } | null)?.name}
           </span>
           {isTransfer && (
             <>
-              <ArrowRight className="w-3 h-3 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">
+              <ArrowRight className="w-3 h-3 text-[#454652]" />
+              <span className="text-xs text-[#454652]">
                 {(transaction.to_wallet as { name: string } | null)?.name}
               </span>
             </>
           )}
-          <span className="text-xs text-muted-foreground/40">·</span>
-          <span className="text-xs text-muted-foreground">{formatDateShort(transaction.date)}</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <p className={cn('font-semibold text-sm', TRANSACTION_TYPE_COLORS[transaction.type])}>
-          {isIncome ? '+' : isTransfer ? '' : '-'}{formatAmount(transaction.amount)}
-        </p>
-        {onDelete && (
-          <button
-            onClick={() => onDelete(transaction.id)}
-            className="p-1.5 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
+      {/* Category chip */}
+      <span className={`hidden sm:inline-flex px-2.5 py-1 text-[10px] font-bold rounded-full uppercase tracking-wide shrink-0 ${categoryBg}`}>
+        {categoryName}
+      </span>
+
+      {/* Date */}
+      <span className="hidden md:block text-xs text-[#454652] shrink-0 tabular-nums">
+        {formatDateShort(transaction.date)}
+      </span>
+
+      {/* Amount */}
+      <p className={`font-bold text-sm tabular-nums shrink-0 ${amountColor}`}>
+        {amountPrefix}{formatAmount(transaction.amount)}
+      </p>
+
+      {/* Delete */}
+      {onDelete && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete(transaction.id) }}
+          className="p-1.5 rounded-lg text-[#454652]/40 hover:text-[#ba1a1a] hover:bg-[#ffdad6] transition-colors opacity-0 group-hover:opacity-100"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
     </div>
   )
 }
