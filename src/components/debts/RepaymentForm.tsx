@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { DebtWithTransactions } from '@/types/database'
 import { useCurrency } from '@/contexts/CurrencyContext'
-import Button from '@/components/ui/Button'
-import NumericKeypad from '@/components/ui/NumericKeypad'
+import Button from '@/components/common/Button'
+import NumericKeypad from '@/components/common/NumericKeypad'
 
 interface RepaymentFormProps {
   debt: DebtWithTransactions

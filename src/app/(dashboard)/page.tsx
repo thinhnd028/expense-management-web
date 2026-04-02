@@ -8,7 +8,7 @@ import { useDebts } from '@/hooks/useDebts'
 import IncomeExpenseChart from '@/components/dashboard/IncomeExpenseChart'
 import TransactionItem from '@/components/transactions/TransactionItem'
 import TransactionForm from '@/components/transactions/TransactionForm'
-import BottomSheet from '@/components/ui/BottomSheet'
+import BottomSheet from '@/components/common/BottomSheet'
 import {
   TrendingUp, TrendingDown, Wallet,
   Plus, ArrowRight, Banknote, Building2, Smartphone,

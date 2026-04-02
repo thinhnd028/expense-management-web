@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
+import Button from '@/components/common/Button'
+import Input from '@/components/common/Input'
 import { cn } from '@/lib/utils'
 import { Handshake, ArrowUpFromLine } from 'lucide-react'
 

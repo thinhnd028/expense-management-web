@@ -3,7 +3,7 @@
 import { TransactionWithDetails } from '@/types/database'
 import { formatDateShort } from '@/lib/utils'
 import { ArrowRight, Trash2 } from 'lucide-react'
-import DynamicIcon from '@/components/ui/DynamicIcon'
+import DynamicIcon from '@/components/common/DynamicIcon'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { Badge } from '@/components/ui/badge'
 

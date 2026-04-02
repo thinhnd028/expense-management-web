@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Wallet } from '@/types/database'
 import { WALLET_COLORS } from '@/lib/utils'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
-import Select from '@/components/ui/Select'
+import Button from '@/components/common/Button'
+import Input from '@/components/common/Input'
+import Select from '@/components/common/Select'
 
 interface WalletFormProps {
   wallet?: Wallet

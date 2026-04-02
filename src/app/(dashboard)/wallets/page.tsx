@@ -6,7 +6,7 @@ import { useWallets } from '@/hooks/useWallets'
 import { Wallet as WalletType } from '@/types/database'
 import WalletCard from '@/components/wallets/WalletCard'
 import WalletForm from '@/components/wallets/WalletForm'
-import BottomSheet from '@/components/ui/BottomSheet'
+import BottomSheet from '@/components/common/BottomSheet'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import {
   Plus, AlertTriangle, TrendingUp,

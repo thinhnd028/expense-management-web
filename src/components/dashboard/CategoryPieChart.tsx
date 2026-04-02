@@ -2,7 +2,7 @@
 
 import { Cell, Pie, PieChart, Tooltip } from 'recharts'
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart'
-import DynamicIcon from '@/components/ui/DynamicIcon'
+import DynamicIcon from '@/components/common/DynamicIcon'
 import { useCurrency } from '@/contexts/CurrencyContext'
 
 interface CategoryData {
