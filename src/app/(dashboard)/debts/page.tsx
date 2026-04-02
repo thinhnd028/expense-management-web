@@ -7,7 +7,7 @@ import { DebtWithTransactions } from '@/types/database'
 import DebtCard from '@/components/debts/DebtCard'
 import DebtForm from '@/components/debts/DebtForm'
 import RepaymentForm from '@/components/debts/RepaymentForm'
-import BottomSheet from '@/components/common/BottomSheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import EmptyState from '@/components/common/EmptyState'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { Plus, Handshake, ArrowUpRight, ArrowDownLeft, Calendar, TrendingDown, CheckCircle } from 'lucide-react'
@@ -233,27 +233,33 @@ export default function DebtsPage() {
       )}
 
       {/* Forms */}
-      <BottomSheet open={showForm} onClose={() => setShowForm(false)} title="Thêm công nợ">
-        <DebtForm
-          userId={userId}
-          onSuccess={() => { setShowForm(false); refetch() }}
-          onCancel={() => setShowForm(false)}
-        />
-      </BottomSheet>
-
-      <BottomSheet
-        open={!!repayDebt}
-        onClose={() => setRepayDebt(null)}
-        title="Ghi nhận thanh toán"
-      >
-        {repayDebt && (
-          <RepaymentForm
-            debt={repayDebt}
-            onSuccess={() => { setRepayDebt(null); refetch() }}
-            onCancel={() => setRepayDebt(null)}
+      <Sheet open={showForm} onOpenChange={setShowForm}>
+        <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto rounded-t-2xl px-6 pb-8">
+          <SheetHeader className="px-0 pb-4">
+            <SheetTitle>Thêm công nợ</SheetTitle>
+          </SheetHeader>
+          <DebtForm
+            userId={userId}
+            onSuccess={() => { setShowForm(false); refetch() }}
+            onCancel={() => setShowForm(false)}
           />
-        )}
-      </BottomSheet>
+        </SheetContent>
+      </Sheet>
+
+      <Sheet open={!!repayDebt} onOpenChange={v => { if (!v) setRepayDebt(null) }}>
+        <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto rounded-t-2xl px-6 pb-8">
+          <SheetHeader className="px-0 pb-4">
+            <SheetTitle>Ghi nhận thanh toán</SheetTitle>
+          </SheetHeader>
+          {repayDebt && (
+            <RepaymentForm
+              debt={repayDebt}
+              onSuccess={() => { setRepayDebt(null); refetch() }}
+              onCancel={() => setRepayDebt(null)}
+            />
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

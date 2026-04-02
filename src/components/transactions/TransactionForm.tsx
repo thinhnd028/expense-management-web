@@ -6,8 +6,7 @@ import { useWallets } from '@/hooks/useWallets'
 import { useCategories } from '@/hooks/useCategories'
 import { TransactionType } from '@/types/database'
 import NumericKeypad from '@/components/common/NumericKeypad'
-import Button from '@/components/common/Button'
-import Select from '@/components/common/Select'
+import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -113,29 +112,50 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
       <NumericKeypad value={amount} onChange={setAmount} />
 
       <div className="space-y-3 pt-2">
-        <Select value={walletId} onChange={e => setWalletId(e.target.value)} label={type === 'transfer' ? 'From Wallet' : 'Wallet'}>
-          <option value="">Select wallet</option>
-          {wallets.map(w => (
-            <option key={w.id} value={w.id}>{w.name} ({formatCurrency(w.balance)})</option>
-          ))}
-        </Select>
-
-        {type === 'transfer' && (
-          <Select value={toWalletId} onChange={e => setToWalletId(e.target.value)} label="To Wallet">
-            <option value="">Select destination</option>
-            {wallets.filter(w => w.id !== walletId).map(w => (
+        <div className="space-y-1">
+          <Label>{type === 'transfer' ? 'From Wallet' : 'Wallet'}</Label>
+          <select
+            value={walletId}
+            onChange={e => setWalletId(e.target.value)}
+            className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 transition-colors appearance-none cursor-pointer"
+          >
+            <option value="">Select wallet</option>
+            {wallets.map(w => (
               <option key={w.id} value={w.id}>{w.name} ({formatCurrency(w.balance)})</option>
             ))}
-          </Select>
+          </select>
+        </div>
+
+        {type === 'transfer' && (
+          <div className="space-y-1">
+            <Label>To Wallet</Label>
+            <select
+              value={toWalletId}
+              onChange={e => setToWalletId(e.target.value)}
+              className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 transition-colors appearance-none cursor-pointer"
+            >
+              <option value="">Select destination</option>
+              {wallets.filter(w => w.id !== walletId).map(w => (
+                <option key={w.id} value={w.id}>{w.name} ({formatCurrency(w.balance)})</option>
+              ))}
+            </select>
+          </div>
         )}
 
         {type !== 'transfer' && (
-          <Select value={categoryId} onChange={e => setCategoryId(e.target.value)} label="Category">
-            <option value="">No category</option>
-            {categories.map(c => (
-              <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
-            ))}
-          </Select>
+          <div className="space-y-1">
+            <Label>Category</Label>
+            <select
+              value={categoryId}
+              onChange={e => setCategoryId(e.target.value)}
+              className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 transition-colors appearance-none cursor-pointer"
+            >
+              <option value="">No category</option>
+              {categories.map(c => (
+                <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
+              ))}
+            </select>
+          </div>
         )}
 
         <div>

@@ -6,7 +6,7 @@ import { useWallets } from '@/hooks/useWallets'
 import { Wallet as WalletType } from '@/types/database'
 import WalletCard from '@/components/wallets/WalletCard'
 import WalletForm from '@/components/wallets/WalletForm'
-import BottomSheet from '@/components/common/BottomSheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import {
   Plus, AlertTriangle, TrendingUp,
@@ -226,49 +226,51 @@ export default function WalletsPage() {
       </div>
 
       {/* ── Create/Edit Form ── */}
-      <BottomSheet
-        open={showForm}
-        onClose={() => { setShowForm(false); setEditWallet(null) }}
-        title={editWallet ? 'Sửa ví' : 'Thêm ví mới'}
-      >
-        <WalletForm
-          wallet={editWallet || undefined}
-          userId={userId}
-          onSuccess={() => { setShowForm(false); setEditWallet(null); refetch() }}
-          onCancel={() => { setShowForm(false); setEditWallet(null) }}
-        />
-      </BottomSheet>
+      <Sheet open={showForm} onOpenChange={v => { if (!v) { setShowForm(false); setEditWallet(null) } }}>
+        <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto rounded-t-2xl px-6 pb-8">
+          <SheetHeader className="px-0 pb-4">
+            <SheetTitle>{editWallet ? 'Sửa ví' : 'Thêm ví mới'}</SheetTitle>
+          </SheetHeader>
+          <WalletForm
+            wallet={editWallet || undefined}
+            userId={userId}
+            onSuccess={() => { setShowForm(false); setEditWallet(null); refetch() }}
+            onCancel={() => { setShowForm(false); setEditWallet(null) }}
+          />
+        </SheetContent>
+      </Sheet>
 
       {/* ── Delete Confirm ── */}
-      <BottomSheet
-        open={!!deleteWallet}
-        onClose={() => setDeleteWallet(null)}
-        title="Xóa ví"
-      >
-        <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
-            <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-700">
-              Bạn có chắc muốn xóa ví <strong>{deleteWallet?.name}</strong>? Tất cả giao dịch liên quan cũng sẽ bị xóa.
-            </p>
+      <Sheet open={!!deleteWallet} onOpenChange={v => { if (!v) setDeleteWallet(null) }}>
+        <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto rounded-t-2xl px-6 pb-8">
+          <SheetHeader className="px-0 pb-4">
+            <SheetTitle>Xóa ví</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">
+                Bạn có chắc muốn xóa ví <strong>{deleteWallet?.name}</strong>? Tất cả giao dịch liên quan cũng sẽ bị xóa.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteWallet(null)}
+                className="flex-1 py-2.5 rounded-xl border border-[#e1e3e4] text-[#454652] font-semibold text-sm hover:bg-[#f3f4f5] transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm disabled:opacity-60 transition-colors"
+              >
+                {deleting ? 'Đang xóa...' : 'Xóa ví'}
+              </button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setDeleteWallet(null)}
-              className="flex-1 py-2.5 rounded-xl border border-[#e1e3e4] text-[#454652] font-semibold text-sm hover:bg-[#f3f4f5] transition-colors"
-            >
-              Hủy
-            </button>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm disabled:opacity-60 transition-colors"
-            >
-              {deleting ? 'Đang xóa...' : 'Xóa ví'}
-            </button>
-          </div>
-        </div>
-      </BottomSheet>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import Button from '@/components/common/Button'
-import Input from '@/components/common/Input'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { Handshake, ArrowUpFromLine } from 'lucide-react'
 
@@ -73,10 +74,22 @@ export default function DebtForm({ userId, onSuccess, onCancel }: DebtFormProps)
         {type === 'borrow' ? 'You owe someone money' : 'Someone owes you money'}
       </p>
 
-      <Input label="Person's Name" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. John Doe" autoFocus />
-      <Input label="Amount" type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0.00" min="0.01" step="0.01" />
-      <Input label="Note (optional)" value={note} onChange={e => setNote(e.target.value)} placeholder="What is this for?" />
-      <Input label="Due Date (optional)" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
+      <div className="space-y-1">
+        <Label>Person's Name</Label>
+        <Input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. John Doe" autoFocus />
+      </div>
+      <div className="space-y-1">
+        <Label>Amount</Label>
+        <Input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0.00" min="0.01" step="0.01" />
+      </div>
+      <div className="space-y-1">
+        <Label>Note (optional)</Label>
+        <Input value={note} onChange={e => setNote(e.target.value)} placeholder="What is this for?" />
+      </div>
+      <div className="space-y-1">
+        <Label>Due Date (optional)</Label>
+        <Input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
+      </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 

@@ -8,7 +8,7 @@ import { useDebts } from '@/hooks/useDebts'
 import IncomeExpenseChart from '@/components/dashboard/IncomeExpenseChart'
 import TransactionItem from '@/components/transactions/TransactionItem'
 import TransactionForm from '@/components/transactions/TransactionForm'
-import BottomSheet from '@/components/common/BottomSheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import {
   TrendingUp, TrendingDown, Wallet,
   Plus, ArrowRight, Banknote, Building2, Smartphone,
@@ -410,13 +410,18 @@ export default function DashboardPage() {
         </span>
       </div>
 
-      <BottomSheet open={showForm} onClose={() => setShowForm(false)} title="Thêm giao dịch">
-        <TransactionForm
-          userId={userId}
-          onSuccess={() => { setShowForm(false); refetchTx(); loadChartData(); loadCategoryData() }}
-          onCancel={() => setShowForm(false)}
-        />
-      </BottomSheet>
+      <Sheet open={showForm} onOpenChange={setShowForm}>
+        <SheetContent side="bottom" className="max-h-[92dvh] overflow-y-auto rounded-t-2xl px-6 pb-8">
+          <SheetHeader className="px-0 pb-4">
+            <SheetTitle>Thêm giao dịch</SheetTitle>
+          </SheetHeader>
+          <TransactionForm
+            userId={userId}
+            onSuccess={() => { setShowForm(false); refetchTx(); loadChartData(); loadCategoryData() }}
+            onCancel={() => setShowForm(false)}
+          />
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

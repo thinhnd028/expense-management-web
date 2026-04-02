@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Wallet } from '@/types/database'
 import { WALLET_COLORS } from '@/lib/utils'
-import Button from '@/components/common/Button'
-import Input from '@/components/common/Input'
-import Select from '@/components/common/Select'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 interface WalletFormProps {
   wallet?: Wallet
@@ -55,37 +55,44 @@ export default function WalletForm({ wallet, userId, onSuccess, onCancel }: Wall
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Input
-        label="Wallet Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        placeholder="e.g. BCA Savings"
-        autoFocus
-      />
+      <div className="space-y-1">
+        <Label>Wallet Name</Label>
+        <Input
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="e.g. BCA Savings"
+          autoFocus
+        />
+      </div>
 
-      <Select
-        label="Type"
-        value={type}
-        onChange={e => setType(e.target.value as Wallet['type'])}
-      >
-        <option value="cash">Cash</option>
-        <option value="bank">Bank</option>
-        <option value="e-wallet">E-Wallet</option>
-      </Select>
+      <div className="space-y-1">
+        <Label>Type</Label>
+        <select
+          value={type}
+          onChange={e => setType(e.target.value as Wallet['type'])}
+          className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 transition-colors appearance-none cursor-pointer"
+        >
+          <option value="cash">Cash</option>
+          <option value="bank">Bank</option>
+          <option value="e-wallet">E-Wallet</option>
+        </select>
+      </div>
 
       {!wallet && (
-        <Input
-          label="Initial Balance"
-          type="number"
-          value={balance}
-          onChange={e => setBalance(e.target.value)}
-          min="0"
-          step="0.01"
-        />
+        <div className="space-y-1">
+          <Label>Initial Balance</Label>
+          <Input
+            type="number"
+            value={balance}
+            onChange={e => setBalance(e.target.value)}
+            min="0"
+            step="0.01"
+          />
+        </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">Color</label>
+        <Label className="mb-2">Color</Label>
         <div className="flex flex-wrap gap-2">
           {WALLET_COLORS.map(c => (
             <button
