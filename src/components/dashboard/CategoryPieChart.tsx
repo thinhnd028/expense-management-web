@@ -2,8 +2,21 @@
 
 import { Cell, Pie, PieChart, Tooltip } from 'recharts'
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart'
-import DynamicIcon from '@/components/common/DynamicIcon'
+import {
+  Briefcase, Laptop, TrendingUp, TrendingDown, Gift, DollarSign,
+  Utensils, Car, ShoppingBag, Gamepad2, HeartPulse, BookOpen,
+  Zap, Home, CreditCard, Circle, Banknote, Building2, Smartphone,
+  ArrowLeftRight, Wallet, Users, LayoutDashboard, Plus, Minus,
+  type LucideProps,
+} from 'lucide-react'
 import { useCurrency } from '@/contexts/CurrencyContext'
+
+const ICON_MAP: Record<string, React.FC<LucideProps>> = {
+  Briefcase, Laptop, TrendingUp, TrendingDown, Gift, DollarSign,
+  Utensils, Car, ShoppingBag, Gamepad2, HeartPulse, BookOpen,
+  Zap, Home, CreditCard, Circle, Banknote, Building2, Smartphone,
+  ArrowLeftRight, Wallet, Users, LayoutDashboard, Plus, Minus,
+}
 
 interface CategoryData {
   name: string
@@ -63,13 +76,14 @@ export default function CategoryPieChart({ data }: { data: CategoryData[] }) {
       <div className="flex-1 space-y-2.5 min-w-0">
         {data.slice(0, 5).map((d, i) => {
           const pct = total ? Math.round((d.value / total) * 100) : 0
+          const Icon = ICON_MAP[d.icon] ?? Circle
           return (
             <div key={i} className="flex items-center gap-2">
               <div
                 className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0"
                 style={{ backgroundColor: d.color + '20' }}
               >
-                <DynamicIcon name={d.icon} className="w-3 h-3" style={{ color: d.color }} />
+                <Icon className="w-3 h-3" style={{ color: d.color }} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1">

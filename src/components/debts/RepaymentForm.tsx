@@ -5,7 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { DebtWithTransactions } from '@/types/database'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { Button } from '@/components/ui/button'
-import NumericKeypad from '@/components/common/NumericKeypad'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 interface RepaymentFormProps {
   debt: DebtWithTransactions
@@ -14,7 +15,7 @@ interface RepaymentFormProps {
 }
 
 export default function RepaymentForm({ debt, onSuccess, onCancel }: RepaymentFormProps) {
-  const [amount, setAmount] = useState('0')
+  const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -62,41 +63,51 @@ export default function RepaymentForm({ debt, onSuccess, onCancel }: RepaymentFo
         </div>
       </div>
 
-      <div className="text-center py-3">
-        <p className="text-xs text-muted-foreground mb-1">Payment amount</p>
-        <p className="text-4xl font-bold text-primary">
-          {formatAmount(parseFloat(amount) || 0)}
-        </p>
-      </div>
-
-      <NumericKeypad value={amount} onChange={setAmount} />
-
-      <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">Note (optional)</label>
-        <input
-          value={note}
-          onChange={e => setNote(e.target.value)}
-          placeholder="e.g. Cash payment"
-          className="w-full px-4 py-2.5 bg-muted border border-input rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+      <div className="space-y-1">
+        <Label>Payment amount</Label>
+        <Input
+          type="number"
+          value={amount}
+          onChange={e => setAmount(e.target.value)}
+          placeholder="0"
+          min="0"
+          max={remaining}
+          step="any"
         />
       </div>
 
+      {/* Quick amount buttons */}
       <div className="flex gap-2">
         {[{ label: '25%', val: remaining / 4 }, { label: '50%', val: remaining / 2 }].map(({ label, val }) => (
-          <button
+          <Button
             key={label}
+            type="button"
+            variant="secondary"
+            size="sm"
             onClick={() => setAmount(String(val))}
-            className="flex-1 py-2 rounded-xl bg-muted text-xs font-medium text-muted-foreground hover:bg-muted/70 transition-colors"
+            className="flex-1"
           >
             {label}
-          </button>
+          </Button>
         ))}
-        <button
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
           onClick={() => setAmount(String(remaining))}
-          className="flex-1 py-2 rounded-xl bg-primary/10 text-xs font-medium text-primary hover:bg-primary/15 transition-colors"
+          className="flex-1"
         >
           Full
-        </button>
+        </Button>
+      </div>
+
+      <div className="space-y-1">
+        <Label>Note (optional)</Label>
+        <Input
+          value={note}
+          onChange={e => setNote(e.target.value)}
+          placeholder="e.g. Cash payment"
+        />
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}

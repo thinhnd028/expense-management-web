@@ -5,8 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { useWallets } from '@/hooks/useWallets'
 import { useCategories } from '@/hooks/useCategories'
 import { TransactionType } from '@/types/database'
-import NumericKeypad from '@/components/common/NumericKeypad'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -26,7 +26,7 @@ const TABS: { label: string; value: TransactionType }[] = [
 
 export default function TransactionForm({ userId, onSuccess, onCancel, defaultType = 'expense' }: TransactionFormProps) {
   const [type, setType] = useState<TransactionType>(defaultType)
-  const [amount, setAmount] = useState('0')
+  const [amount, setAmount] = useState('')
   const [walletId, setWalletId] = useState('')
   const [toWalletId, setToWalletId] = useState('')
   const [categoryId, setCategoryId] = useState('')
@@ -96,22 +96,32 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
         ))}
       </div>
 
-      {/* Amount Display */}
-      <div className="text-center py-4">
-        <p className="text-xs text-muted-foreground mb-1">
-          {selectedWallet ? `From: ${selectedWallet.name}` : 'Select wallet'}
-        </p>
-        <p className={cn(
-          'text-4xl font-bold',
-          type === 'income' ? 'text-emerald-600' : type === 'transfer' ? 'text-blue-600' : 'text-destructive'
-        )}>
-          {formatCurrency(parseFloat(amount) || 0)}
-        </p>
-      </div>
+      <div className="space-y-3">
+        {/* Amount */}
+        <div className="space-y-1">
+          <Label>
+            Amount
+            {selectedWallet && (
+              <span className="ml-1 font-normal text-muted-foreground">
+                — {selectedWallet.name} ({formatCurrency(selectedWallet.balance)})
+              </span>
+            )}
+          </Label>
+          <Input
+            type="number"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            placeholder="0"
+            min="0"
+            step="any"
+            className={cn(
+              'text-lg font-semibold',
+              type === 'income' ? 'text-emerald-600' : type === 'transfer' ? 'text-blue-600' : 'text-destructive'
+            )}
+          />
+        </div>
 
-      <NumericKeypad value={amount} onChange={setAmount} />
-
-      <div className="space-y-3 pt-2">
+        {/* Wallet */}
         <div className="space-y-1">
           <Label>{type === 'transfer' ? 'From Wallet' : 'Wallet'}</Label>
           <select
@@ -158,23 +168,21 @@ export default function TransactionForm({ userId, onSuccess, onCancel, defaultTy
           </div>
         )}
 
-        <div>
-          <Label className="block mb-1.5">Note (optional)</Label>
-          <input
+        <div className="space-y-1">
+          <Label>Note (optional)</Label>
+          <Input
             value={note}
             onChange={e => setNote(e.target.value)}
             placeholder="Add a note..."
-            className="w-full px-4 py-2.5 bg-muted border border-input rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           />
         </div>
 
-        <div>
-          <Label className="block mb-1.5">Date</Label>
-          <input
+        <div className="space-y-1">
+          <Label>Date</Label>
+          <Input
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="w-full px-4 py-2.5 bg-muted border border-input rounded-xl text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           />
         </div>
       </div>

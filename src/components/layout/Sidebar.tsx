@@ -50,7 +50,7 @@ export default function Sidebar() {
           <div className="w-8 h-8 rounded-lg hero-gradient flex items-center justify-center shrink-0">
             <TrendingUp className="w-4 h-4 text-white" />
           </div>
-          <span className="font-headline text-[17px] font-bold text-[#0e1c2b] tracking-tight">ExpenseFlow</span>
+          <span className="text-base font-bold text-foreground tracking-tight">ExpenseFlow</span>
         </div>
       </div>
 
@@ -65,8 +65,8 @@ export default function Sidebar() {
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-[#0e1c2b] text-white'
-                  : 'text-[#454652] hover:text-[#0e1c2b] hover:bg-[#f3f4f5]'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               )}
             >
               <item.icon className="h-4 w-4 shrink-0" />
@@ -79,29 +79,31 @@ export default function Sidebar() {
       {/* User profile at bottom */}
       <div className="px-4 pb-6 pt-4">
         <Separator className="mb-4 bg-black/5" />
-        <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#f3f4f5] transition-colors group">
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors group">
           {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[#e7e8e9] flex items-center justify-center text-[#0e1c2b] font-bold text-xs font-headline shrink-0">
+            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold text-xs shrink-0">
               {profile?.full_name?.[0]?.toUpperCase() || profile?.email?.[0]?.toUpperCase() || 'U'}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#191c1d] truncate leading-none">
+            <p className="text-sm font-medium text-foreground truncate leading-none">
               {profile?.full_name || profile?.email || 'User'}
             </p>
-            <p className="text-xs text-[#454652] mt-0.5">Premium Member</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Premium Member</p>
           </div>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={handleSignOut}
-                className="w-7 h-7 flex items-center justify-center rounded-md text-[#454652] hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </TooltipTrigger>
+            <TooltipTrigger
+              render={
+                <button
+                  onClick={handleSignOut}
+                  className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              }
+            />
             <TooltipContent side="right">Đăng xuất</TooltipContent>
           </Tooltip>
         </div>

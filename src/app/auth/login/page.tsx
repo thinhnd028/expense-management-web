@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 const features = [
   { icon: Wallet, label: 'Multi-wallet' },
   { icon: BarChart2, label: 'Analytics' },
-  { icon: Smartphone, label: 'Mobile PWA' },
+  { icon: Smartphone, label: 'Mobile-first' },
 ]
 
 type Mode = 'choose' | 'signin' | 'signup'
