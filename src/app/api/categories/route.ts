@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     .order('name', { ascending: true })
 
   if (type && ['income', 'expense'].includes(type)) {
-    query = query.eq('type', type)
+    query = query.eq('type', type as 'income' | 'expense')
   }
 
   const { data, error } = await query
