@@ -17,18 +17,16 @@ export async function GET(request: NextRequest) {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
-  if (status && ['unpaid', 'paid'].includes(status)) query = query.eq('status', status)
-  if (type && ['borrow', 'lend'].includes(type)) query = query.eq('type', type)
+  if (status && ['unpaid', 'paid'].includes(status)) query = query.eq('status', status as 'unpaid' | 'paid')
+  if (type && ['borrow', 'lend'].includes(type)) query = query.eq('type', type as 'borrow' | 'lend')
 
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Enrich with paid_amount and remaining
   const enriched = (data ?? []).map(debt => {
-    const paid_amount = (debt.debt_transactions ?? []).reduce(
-      (sum: number, t: { amount: number }) => sum + t.amount,
-      0
-    )
+    const payments = (debt.debt_transactions as unknown as Array<{ id: string; amount: number; note: string | null; created_at: string }> | null) ?? []
+    const paid_amount = payments.reduce((sum, t) => sum + t.amount, 0)
     return { ...debt, paid_amount, remaining: debt.amount - paid_amount }
   })
 

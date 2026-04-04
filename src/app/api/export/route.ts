@@ -28,18 +28,20 @@ export async function GET(request: NextRequest) {
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
+  type ExportRow = {
+    date: string
+    type: string
+    amount: number
+    note: string | null
+    wallets: { name: string } | null
+    to_wallet: { name: string } | null
+    categories: { name: string } | null
+  }
+
   // Build CSV
   const rows = [
     ['Date', 'Type', 'Amount', 'Wallet', 'To Wallet', 'Category', 'Note'],
-    ...(data ?? []).map((tx: {
-      date: string
-      type: string
-      amount: number
-      note: string | null
-      wallets: { name: string } | null
-      to_wallet: { name: string } | null
-      categories: { name: string } | null
-    }) => [
+    ...((data as unknown as ExportRow[]) ?? []).map((tx) => [
       new Date(tx.date).toLocaleDateString('vi-VN'),
       tx.type,
       tx.amount,
